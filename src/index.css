@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+button {
+	color: black;
+}
+
+input {
+	color: black;
+}
+
+html {
+	max-height: 100vh;
+}

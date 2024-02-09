@@ -6,7 +6,7 @@ import { GoDotFill } from 'react-icons/go'
 function Footer() {
 	return (
 		<div className="bg-black text-white flex flex-col items-center pt-16 pb-8">
-			<div className="w-full flex justify-between px-40 uppercase">
+			<div className="w-full md:flex sm:flex-row justify-between px-40 uppercase">
 				<img src={logo} alt="logo" width={100} className="h-fit aspect-video" />
 
 				<div className="flex flex-col">

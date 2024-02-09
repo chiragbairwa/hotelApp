@@ -21,7 +21,7 @@ export default function SignIn() {
 
 		setLoading(true)
 
-		fetch('/api/signin', {
+		fetch('http://192.168.1.115:8000/account/signin/', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -30,22 +30,24 @@ export default function SignIn() {
 		})
 			.then(res => res.json())
 			.then(res => {
+				console.log(res)
 				if (res.success) {
 					toast.success('Login Success')
 					setLoading(false)
-					redirect('/')
+					// redirect('/')
 				}
 				if (res.error) toast.error(res.error)
+				console.log()
 			})
 			.catch(err => console.log(err))
 			.finally(() => setLoading(false))
 	}
 
 	return (
-		<main className="px-24">
+		<main className="px-24 text-white w-screen h-screen flex items-center justify-center">
 			<form
 				onSubmit={handleSubmit}
-				className="flex flex-col gap-4 bg-gray-200 rounded p-12 w-96"
+				className="flex flex-col gap-4 bg-red-300 rounded p-12 w-96"
 			>
 				<h1 className="m-auto text-2xl">Sign In</h1>
 				<label htmlFor="signinEmail">Email : </label>
@@ -56,7 +58,7 @@ export default function SignIn() {
 					onChange={handleChange}
 					name="email"
 					required
-					maxLength={20}
+					maxLength={80}
 					className="p-2 rounded -mt-3"
 					placeholder="test@gmail.com"
 					inputMode="email"
@@ -70,7 +72,21 @@ export default function SignIn() {
 					name="password"
 					type="password"
 					required
-					maxLength={20}
+					maxLength={80}
+					className="p-2 rounded -mt-3"
+					placeholder="*********"
+				/>
+
+				{/* isAdmin */}
+				<label htmlFor="signinPass">Password :</label>
+				{/* <input type='password' required className='p-2 rounded -mt-3' placeholder='*********'/> */}
+				<input
+					id="signinPass"
+					onChange={handleChange}
+					name="password"
+					type="password"
+					required
+					maxLength={80}
 					className="p-2 rounded -mt-3"
 					placeholder="*********"
 				/>

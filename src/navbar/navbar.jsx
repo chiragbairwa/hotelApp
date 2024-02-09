@@ -5,6 +5,7 @@ function Navbar() {
 	return (
 		<nav className="flex justify-between items-center">
 			<img src={logo} alt="logo" width={80} height={50} />
+			<button className="border p-2 rounded">Add ITEM</button>
 			<p className="tracking-[4px] text-2xl mr-10">SUNRISE</p>
 			<CartIcon />
 		</nav>
