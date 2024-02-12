@@ -1,10 +1,17 @@
 import toast from 'react-hot-toast'
 import { useState } from 'react'
-import { Link, redirect } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { setAdmin } from '../../redux/user/cartSlice'
 
 export default function SignIn() {
 	const [loading, setLoading] = useState(false)
+	const redirect = useNavigate()
+	const dispatch = useDispatch()
+
 	const [user, setUser] = useState({
+		is_admin: false,
 		email: '',
 		password: '',
 	})
@@ -31,18 +38,27 @@ export default function SignIn() {
 			.then(res => res.json())
 			.then(res => {
 				console.log(res)
-				if (res.success) {
+				if (res.status) {
 					toast.success('Login Success')
 					setLoading(false)
-					// redirect('/')
+					window.sessionStorage.setItem('token', res.token.access)
+					if (user.is_admin) {
+						dispatch(setAdmin(true))
+						redirect('/admin')
+					} else {
+						redirect('/')
+					}
 				}
 				if (res.error) toast.error(res.error)
-				console.log()
 			})
 			.catch(err => console.log(err))
 			.finally(() => setLoading(false))
 	}
-
+	useEffect(() => {
+		if (window.sessionStorage.getItem('token')) {
+			redirect('/')
+		}
+	}, [])
 	return (
 		<main className="px-24 text-white w-screen h-screen flex items-center justify-center">
 			<form
@@ -78,18 +94,19 @@ export default function SignIn() {
 				/>
 
 				{/* isAdmin */}
-				<label htmlFor="signinPass">Password :</label>
-				{/* <input type='password' required className='p-2 rounded -mt-3' placeholder='*********'/> */}
-				<input
-					id="signinPass"
-					onChange={handleChange}
-					name="password"
-					type="password"
-					required
-					maxLength={80}
-					className="p-2 rounded -mt-3"
-					placeholder="*********"
-				/>
+				<label htmlFor="signinPass">
+					{'Are you an Admin : '}
+					{/* <input type='password' required className='p-2 rounded -mt-3' placeholder='*********'/> */}
+					<input
+						id="is_admin"
+						onChange={() => {
+							setUser({ ...user, is_admin: !user.is_admin })
+						}}
+						name="is_admin"
+						type="checkbox"
+						className="p-2 rounded -mt-3"
+					/>
+				</label>
 
 				<button
 					disabled={loading}

@@ -4,33 +4,42 @@ import { clearCart, removeItem } from '../../redux/user/cartSlice'
 import { IoIosClose } from 'react-icons/io'
 import { MdDelete } from 'react-icons/md'
 import { FaShoppingCart } from 'react-icons/fa'
+import { useState } from 'react'
 
-const CartItem = ({ price }) => {
+const CartItem = ({ productData }) => {
 	const dispatch = useDispatch()
-
+	const [num, setNum] = useState(0)
 	return (
 		<div className="flex items-center justify-around">
-			<div className="w-12 h-12 bg-black rounded-full" />
+			<img
+				src={productData?.image}
+				className="w-12 h-12 bg-black rounded-full"
+			/>
 			<div>
 				<p className="text-left">Cart Item</p>
 				<p className="flex items-center justify-center gap-3">
-					{`₹${price}`}
+					{`₹${productData?.price}`}
 					<span className="border rounded-2xl w-fit flex items-center gap-2 px-2 ">
-						<button className="text-xl">+</button>
-						<span className="text-red-600 text-sm">{2}</span>
-						<button className="text-2xl">-</button>
+						<button className="text-xl" onClick={() => setNum(num + 1)}>
+							+
+						</button>
+						<span className="text-red-600 text-sm">{num}</span>
+						<button className="text-2xl" onClick={() => setNum(num - 1)}>
+							-
+						</button>
 					</span>
 				</p>
 			</div>
 			<MdDelete
 				color="red"
 				size={28}
-				onClick={() => dispatch(removeItem())}
+				onClick={() => dispatch(removeItem(productData.name))}
 				className="cursor-pointer"
 			/>
 		</div>
 	)
 }
+
 export default function ModalContent({ onClose }) {
 	const cartItems = useSelector(store => store.cart.items)
 	const dispatch = useDispatch()
@@ -39,7 +48,11 @@ export default function ModalContent({ onClose }) {
 		if (!cartItems.length) {
 			return 0
 		}
-		return 4545
+		let total = 0
+		cartItems.map(item => {
+			total += item.price
+		})
+		return total
 	}
 
 	return (
@@ -66,10 +79,11 @@ export default function ModalContent({ onClose }) {
 							: null}
 					</div>
 				</div>
+
 				<div className="flex flex-col gap-6 my-6">
 					{cartItems.length
 						? cartItems.map((item, index) => (
-								<CartItem key={index} price={392} />
+								<CartItem key={index} productData={item} />
 						  ))
 						: null}
 				</div>

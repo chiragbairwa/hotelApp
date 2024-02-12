@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
+import Admin from './admin/admin.jsx'
 import SignIn from './auth/signin'
 import SignUp from './auth/signup'
 
@@ -13,6 +14,10 @@ const router = createBrowserRouter([
 	{
 		path: '/',
 		element: <App />,
+	},
+	{
+		path: '/admin',
+		element: <Admin />,
 	},
 	{
 		path: '/signin',

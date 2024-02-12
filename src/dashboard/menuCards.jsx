@@ -2,9 +2,10 @@ import { addItem } from '../../redux/user/cartSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import { useState } from 'react'
 
-const MenuCard = ({ imgSrc, productData }) => {
+const MenuCard = ({ productData }) => {
 	const cartItems = useSelector(store => store.cart.items)
 	const dispatch = useDispatch()
+
 	const [cartNum, setCartNum] = useState(1)
 
 	const addToCart = () => {
@@ -13,26 +14,25 @@ const MenuCard = ({ imgSrc, productData }) => {
 		for (let i = 0; i < cartNum; i++) {
 			data = [...data, productData]
 		}
-
 		dispatch(addItem(data))
 	}
 
 	return (
-		<div className="flex gap-4 lg:max-w-[30vw]">
+		<div className="flex gap-4 lg:max-w-[30vw] ">
 			<img
-				src={imgSrc}
+				src={productData.image}
 				alt={productData.name}
-				className="w-[12rem] h-fit outline outline-yellow-600 rounded"
+				className="w-[192px] h-[192px] aspect-square outline outline-yellow-600 rounded"
 			/>
 
 			<div className="text-left w-full">
 				<p className="font-bold flex justify-between tracking-[2px]">
-					{productData.name} {productData.id}
+					{productData.name}
 					<span className="text-yellow-300">{`₹${productData.price}`}</span>
 				</p>
 				<hr className="my-2" />
 				{/* dish content */}
-				<div className="text-sm">
+				<div className="text-sm h-24">
 					{productData.content}
 					<div className="flex gap-2 float-right mt-2 ">
 						<button className="border rounded-2xl px-3 " onClick={addToCart}>

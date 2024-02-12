@@ -1,17 +1,18 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import toast from 'react-hot-toast'
-import { Link, redirect } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 export default function SignUp() {
 	const [loading, setLoading] = useState(false)
+	const redirect = useNavigate()
 
 	const [user, setUser] = useState({
 		username: '',
 		email: '',
 		password: '',
-		passConfirm: '',
-		contactNo: 0,
-		isAdmin: false,
+		passwordConfirm: '',
+		phone_number: 0,
+		is_admin: false,
 	})
 
 	const [errors, setErrors] = useState({
@@ -28,11 +29,11 @@ export default function SignUp() {
 
 	const handleSubmit = event => {
 		event.preventDefault()
-		if (user.password === user.passConfirm) {
+
+		if (user.password === user.passwordConfirm) {
 			setLoading(true)
-			fetch('http://192.168.1.60:5000/signUp', {
+			fetch('http://192.168.1.115:8000/account/register/', {
 				method: 'POST',
-				cache: 'no-cache',
 				headers: {
 					'Content-Type': 'application/json',
 				},
@@ -40,6 +41,8 @@ export default function SignUp() {
 			})
 				.then(res => res.json())
 				.then(res => {
+					console.log(res)
+
 					if (res.message) {
 						toast.success('Sign Up Completed')
 						redirect('/signin')
@@ -53,6 +56,12 @@ export default function SignUp() {
 				.finally(() => setLoading(false))
 		}
 	}
+	useEffect(() => {
+		if (window.sessionStorage.getItem('token')) {
+			redirect('/')
+		}
+	}, [])
+
 	return (
 		<main className="text-white w-screen h-screen flex items-center justify-center">
 			<form
@@ -137,41 +146,40 @@ export default function SignUp() {
 				/>
 
 				{/* Contact Number */}
-				<label htmlFor="signupNumber">
+				<label htmlFor="phone_number">
 					Mobile :{' '}
 					{errors.password && (
 						<span className="-mt-4 text-red-700">This field is required</span>
 					)}
 				</label>
 				<input
-					id="signupNumber"
+					id="phone_number"
 					onChange={handleChange}
-					name="contactNo"
+					name="phone_number"
 					type="number"
 					required
 					maxLength={20}
 					className={`p-2 rounded -mt-3 border-2 ${
 						errors.password ? 'border-rose-600' : 'border-none'
 					}`}
-					placeholder="*********"
 				/>
 
 				{/* isAdmin */}
-				<label htmlFor="signupNumber">
+				<label htmlFor="is_admin">
 					Are you an Admin? :{' '}
 					{errors.password && (
 						<span className="-mt-4 text-red-700">This field is required</span>
 					)}
 					<input
-						id="isAdmin"
+						id="is_admin"
 						onChange={e => {
 							setUser({
 								...user,
-								isAdmin: e.target.checked,
+								is_admin: e.target.checked,
 							})
 						}}
-						checked={user.isAdmin}
-						name="isAdmin"
+						checked={user.is_admin}
+						name="is_admin"
 						type="checkbox"
 						className={`p-2 rounded -mt-3 border-2`}
 					/>
@@ -184,6 +192,7 @@ export default function SignUp() {
 								? 'bg-red-900 border-red-900 cursor-wait'
 								: 'bg-red-800 border-red-800 cursor-pointer'
 						}`}
+					type="submit"
 				>
 					{loading ? 'Processing...' : 'Sign up'}
 				</button>
